@@ -1,10 +1,14 @@
-import Login from './components/Login';
+
+import { Routes, Route } from 'react-router-dom';
+import Login from './Pages/Login';
+import Welcome from './Pages/Welcome';
 
 const App = () => {
   return (
-    <div>
-      <Login />
-    </div>
+    <Routes>
+      <Route path='/' element={<Login />}></Route>
+      <Route path='/welcome' element={<Welcome />}></Route>
+      </Routes>
   );
 }
 
