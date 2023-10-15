@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { Card, Form, Button } from "react-bootstrap";
+import "./Login.css";
+import { auth } from "../config/firebase";
+import logo from '../assests/sharp-mail-low-resolution-logo-color-on-transparent-background - Copy.png';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -28,25 +34,13 @@ const Login = () => {
   };
 
   const handleSignup = async () => {
-    //Sigup Logic
-
     if (!isLogin) {
-      const authUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAsIfm2Cj65I3bpkMyPcBl0UPLsYBgBeF0";
-
-      const autData = {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      };
-
       if (password === confirmPassword) {
         try {
-          const response = await axios.post(authUrl, autData);
-          if(response.status === 200) {
-            alert("Sign Up Successful, Please Login");
-            setIsLogin(!isLogin);
-          }
+          await createUserWithEmailAndPassword(auth, email, password);
+
+          alert("Sign Up Successful, Please Login");
+          setIsLogin(!isLogin);
         } catch (error) {
           console.log(error);
         }
@@ -55,23 +49,11 @@ const Login = () => {
       }
     }
 
-    //Login Login
-    if (Login) {
-      const authUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAsIfm2Cj65I3bpkMyPcBl0UPLsYBgBeF0";
-
-      const autData = {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      };
-
+    if (isLogin) {
       try {
-        const response = await axios.post(authUrl, autData);
-        if(response.status === 200) {
-          navigate('/welcome');
-          console.log("logeed in");
-        }
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/welcome");
+        console.log("Logged in");
       } catch (error) {
         console.log(error);
       }
@@ -81,11 +63,15 @@ const Login = () => {
   return (
     <div
       className="d-flex align-items-center justify-content-center"
-      style={{ margin: "5rem" }}
+      style={{ margin: "1rem" }}
     >
       <Card style={{ width: "35%" }}>
+        <div className="d-flex align-items-center justify-content-center mt-4">
+        <img src={logo} alt="logo" className="logo" />
+        </div>
         <Card.Body>
-          <h1 className="text-center">{isLogin ? "Login" : "Sign Up"}</h1>
+          <p className="text-center login-title">{isLogin ? "Login" : "Sign Up"}</p>
+          <p className="text-center tagline">Made by a Sharpenerian</p>
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -120,23 +106,26 @@ const Login = () => {
             )}
 
             <Button
-              variant="primary"
               type="button"
               onClick={handleSignup}
-              className="w-100 mt-4"
+              className="w-25 mt-4 login"
             >
               {isLogin ? "Login" : "Sign Up"}
             </Button>
 
-            <Button
-              className="w-100 mt-4"
-              variant="dark"
-              onClick={togglePageHandler}
-            >
-              {isLogin
-                ? "Don't Have an Account ? Sign Up"
-                : "Have an account? Login"}
-            </Button>
+            <div className="w-100 mt-4">
+              <p className="text">
+                {" "}
+                {isLogin ? "Don't Have an Account ?" : "Have an account?"}{""}
+                <button
+                  type="button"
+                  className="link-like-btn"
+                  onClick={togglePageHandler}
+                >
+                  {isLogin ? "Sign Up" : "Login"}
+                </button>
+              </p>
+            </div>
           </Form>
         </Card.Body>
       </Card>
