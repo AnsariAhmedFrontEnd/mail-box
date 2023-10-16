@@ -42,3 +42,7 @@
 height: 30px;
 width: 30px;
 }
+
+ .MuiSvgIcon-root {
+    color: #BA0001;
+}

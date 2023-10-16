@@ -42,7 +42,7 @@
 .sidebar--active h4,
 .sidebar--active p,
 .sidebar--active svg {
-  color: white;
+  color: white !important;
   font-weight: bold;
   opacity: 1 !important;
 }
@@ -50,4 +50,8 @@
 .sidebar__options:hover {
     cursor: pointer;
     background-color: whitesmoke;
+}
+
+.MuiSvgIcon-root {
+  color: #BA0001 !important;
 }
