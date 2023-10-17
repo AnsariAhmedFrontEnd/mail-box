@@ -52,6 +52,6 @@
     background-color: whitesmoke;
 }
 
-.MuiSvgIcon-root {
-  color: #BA0001 !important;
+.sidebar__options svg {
+  color: #BA0001;
 }

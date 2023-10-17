@@ -1,4 +1,3 @@
-
 import { Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import Welcome from './Pages/Welcome';

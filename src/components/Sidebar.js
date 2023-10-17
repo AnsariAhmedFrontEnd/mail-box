@@ -8,11 +8,20 @@ import StarIcon from '@mui/icons-material/Star';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import SendIcon from '@mui/icons-material/Send';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import {useDispatch} from 'react-redux';
+import { mailActions } from '../store/mailSlice';
 
 const Sidebar =() => {
+  const dispatch = useDispatch();
+
+  const composeMailHandler = () => {
+    dispatch(mailActions.openSendMessage());
+  };
+
+
   return (
     <div className='sidebar'>
-      <Button startIcon={<AddIcon />} className='compose__btn'>Compose</Button>
+      <Button startIcon={<AddIcon />} className='compose__btn' onClick={composeMailHandler}>Compose</Button>
       <SidebarOptions  Icon={MailIcon} title="Inbox" number='224' isActive='true'/>
       <SidebarOptions  Icon={StarIcon} title="Starred" number='224'/>
       <SidebarOptions  Icon={LabelImportantIcon} title="Important" number='224'/>
