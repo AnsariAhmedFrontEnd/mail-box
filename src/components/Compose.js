@@ -35,7 +35,7 @@ const Compose = () => {
       console.error("Error sending email:", error);
     }
 
-    alert('Email Sent Successfully');
+    alert('Email Sent Successfully')
 
     setTo('');
     setSubject('');
