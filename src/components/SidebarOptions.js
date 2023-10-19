@@ -2,8 +2,10 @@ import React from "react";
 import "./SidebarOptions.css";
 
 const SidebarOptions = ({ Icon, title, number, isActive }) => {
+  const activeClassName = `sidebar__options ${isActive?"sidebar--active": ''}`;
   return (
-    <div className={`sidebar__options ${isActive && "sidebar--active"}`}>
+    <div className={activeClassName}>
+
       <Icon />
       <h4>{title}</h4>
       <p>{number}</p>

@@ -9,10 +9,13 @@ import { app,auth } from "../config/firebase";
 const EmailList = () => {
   const [emails, setEmails] = useState([]);
   const firestore = getFirestore(app);
-  const currentUser = auth.currentUser?.email;
+  const currentUser = auth?.currentUser?.email;
 
   useEffect(() => {
     const fetchEmails = async () => {
+      if(!currentUser) {
+        return;
+      }
       const emailCollection = collection(firestore, "users", currentUser, 'inbox');
       const q = query(emailCollection, orderBy("timeStamp", "desc")); // Sort by timeStamp in descending order
 
