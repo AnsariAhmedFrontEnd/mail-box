@@ -26,6 +26,7 @@
 
 
 
+
 .email-body .email-body__middle {
     display: flex;
     align-items: center;
@@ -37,11 +38,18 @@
     margin: auto 0px;
 }
 
+.email-body .email-body__middle h4 {
+    font-size: 14px;
+    margin: auto 0px;
+    font-weight: bold;
+}
+
 .email-body .email-body__right {
     display: flex;
     align-items: center;
     flex: 10%;
 }
+
 
 .email-body .email-body__right p {
     font-size: 12px;

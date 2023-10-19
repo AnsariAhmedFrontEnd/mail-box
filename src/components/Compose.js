@@ -6,27 +6,42 @@ import Editor from "./Editor";
 import "./Compose.css";
 import { useDispatch } from "react-redux";
 import { mailActions } from "../store/mailSlice";
-import { app } from "../config/firebase";
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
+import { app, auth } from "../config/firebase";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const Compose = () => {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [msg, setMsg] = useState("");
 
+  const user = auth.currentUser.email;
+
   const dispatch = useDispatch();
   const closeMailBoxHandler = () => {
     dispatch(mailActions.closeSendMessage());
   };
 
-  const SendMailHandler = async(event) => {
+  const SendMailHandler = async (event) => {
     event.preventDefault();
     const firestore = getFirestore(app);
 
     try {
-      await addDoc(collection(firestore, 'emails'), {
+      await addDoc(collection(firestore, "users", user, "sent"), {
         to,
+        subject,
+        msg,
+        timeStamp: serverTimestamp(),
+      });
+
+      const receiverEmail = to;
+
+      await addDoc(collection(firestore, "users", receiverEmail, "inbox"), {
+        from: user,
         subject,
         msg,
         timeStamp: serverTimestamp(),
@@ -35,16 +50,13 @@ const Compose = () => {
       console.error("Error sending email:", error);
     }
 
-    alert('Email Sent Successfully')
+    alert("Email Sent Successfully");
 
-    setTo('');
-    setSubject('');
-    setMsg('');
+    setTo("");
+    setSubject("");
+    setMsg("");
 
     dispatch(mailActions.closeSendMessage());
-
-
-   
   };
   return (
     <div className="compose">

@@ -4,15 +4,16 @@ import "./EmailList.css";
 import EmailListSettings from './EamilListSettings';
 import EmailType from "./EmailType";
 import EmailBody from "./EmailBody";
-import { app } from "../config/firebase";
+import { app,auth } from "../config/firebase";
 
 const EmailList = () => {
   const [emails, setEmails] = useState([]);
   const firestore = getFirestore(app);
+  const currentUser = auth.currentUser?.email;
 
   useEffect(() => {
     const fetchEmails = async () => {
-      const emailCollection = collection(firestore, "emails");
+      const emailCollection = collection(firestore, "users", currentUser, 'inbox');
       const q = query(emailCollection, orderBy("timeStamp", "desc")); // Sort by timeStamp in descending order
 
       try {
@@ -34,7 +35,7 @@ const EmailList = () => {
     };
 
     fetchEmails();
-  }, [firestore]);
+  }, [firestore, currentUser]);
 
   return (
     <div className="email-list">
