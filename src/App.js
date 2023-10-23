@@ -6,7 +6,7 @@ const App = () => {
   return (
     <Routes>
       <Route path='/' element={<Login />}></Route>
-      <Route path='/welcome' element={<Welcome />}></Route>
+      <Route path='/inbox/*' element={<Welcome />}></Route>
       </Routes>
   );
 }

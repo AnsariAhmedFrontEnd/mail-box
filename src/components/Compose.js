@@ -6,20 +6,17 @@ import Editor from "./Editor";
 import "./Compose.css";
 import { useDispatch } from "react-redux";
 import { mailActions } from "../store/mailSlice";
-import { app, auth } from "../config/firebase";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { auth } from "../config/firebase";
+import axios from "axios";
 
 const Compose = () => {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [msg, setMsg] = useState("");
 
-  const user = auth.currentUser.email;
+
+  const user = auth?.currentUser?.email;
+  console.log(user);
 
   const dispatch = useDispatch();
   const closeMailBoxHandler = () => {
@@ -28,24 +25,32 @@ const Compose = () => {
 
   const SendMailHandler = async (event) => {
     event.preventDefault();
-    const firestore = getFirestore(app);
+    const sanitizedTo = to.replace(/[@.]/g, '');
+    const sanitizedUser = user.replace(/[@.]/g, '');
+
+    const sentEmailData = {
+      to,
+      subject,
+      msg,
+      timeStamp: new Date(),
+    };
 
     try {
-      await addDoc(collection(firestore, "users", user, "sent"), {
-        to,
+
+      //data should be in senders sent box
+      const sentUrl = `https://mail-box-7480d-default-rtdb.firebaseio.com/${sanitizedUser}/sent.json`;
+      await axios.post(sentUrl, sentEmailData);
+
+      const inboxEmailData =  {
+        from:user,
         subject,
         msg,
-        timeStamp: serverTimestamp(),
-      });
+        timeStamp: new Date(),
+      };
 
-      const receiverEmail = to;
-
-      await addDoc(collection(firestore, "users", receiverEmail, "inbox"), {
-        from: user,
-        subject,
-        msg,
-        timeStamp: serverTimestamp(),
-      });
+      //data should be in receivers inbox
+      const inboxUrl = `https://mail-box-7480d-default-rtdb.firebaseio.com/${sanitizedTo}/inbox.json`;
+      await axios.post(inboxUrl, inboxEmailData);
     } catch (error) {
       console.error("Error sending email:", error);
     }

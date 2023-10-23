@@ -52,7 +52,7 @@ const Login = () => {
     if (isLogin) {
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        navigate("/welcome");
+        navigate("/inbox");
         console.log("Logged in");
       } catch (error) {
         console.log(error);

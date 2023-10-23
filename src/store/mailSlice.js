@@ -4,6 +4,7 @@ const mailSlice = createSlice({
   name: "mail",
   initialState: {
     sendMessageIsOpen: false,
+    emails: [],
   },
 
   reducers: {
@@ -13,6 +14,9 @@ const mailSlice = createSlice({
 
     closeSendMessage: (state) => {
       state.sendMessageIsOpen = false;
+    },
+    setEmails : (state, action) => {
+      state.emails = action.payload
     },
   },
 });
