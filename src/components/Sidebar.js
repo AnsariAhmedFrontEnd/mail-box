@@ -8,16 +8,36 @@ import StarIcon from "@mui/icons-material/Star";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import SendIcon from "@mui/icons-material/Send";
 import DraftsIcon from "@mui/icons-material/Drafts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../store/mailSlice";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const emailsArray = useSelector(state => state.mail.emails);
+  const SentArray = useSelector(state => state.mail.sent);
+  const navigate = useNavigate();
+
+  const totalInbox = emailsArray.reduce((total, email) => {
+    
+      total += 1;
+    
+    return total;
+  }, 0); 
+  
+
+  const totalSent = SentArray.reduce((total, email) => {
+    
+    total += 1;
+  
+  return total;
+}, 0); 
+
   const [activeOptions, setActiveOptions] = useState({
     inbox: true,
     starred: false,
     important: false,
     sent: false,
-    drafts: false, // Set the default active option
+    drafts: false,
   });
   const dispatch = useDispatch();
 
@@ -26,7 +46,6 @@ const Sidebar = () => {
   };
 
   const handleSidebarOptionClick = (optionName) => {
-    // Create a new object with all options set to false, and the clicked option set to true
     const newActiveOptions = {
       inbox: false,
       starred: false,
@@ -39,6 +58,8 @@ const Sidebar = () => {
 
 
     setActiveOptions(newActiveOptions);
+
+navigate(`/mails/${optionName}`);
   };
 
   return (
@@ -55,7 +76,7 @@ const Sidebar = () => {
         <SidebarOptions
           Icon={MailIcon}
           title="Inbox"
-          number="224"
+          number={totalInbox}
           isActive={activeOptions.inbox}
         />
       </div>
@@ -64,7 +85,7 @@ const Sidebar = () => {
         <SidebarOptions
           Icon={StarIcon}
           title="Starred"
-          number="224"
+          number="0"
           isActive={activeOptions.starred}
         />
       </div>
@@ -73,7 +94,7 @@ const Sidebar = () => {
         <SidebarOptions
           Icon={LabelImportantIcon}
           title="Important"
-          number="224"
+          number="0"
           isActive={activeOptions.important}
         />
       </div>
@@ -82,7 +103,7 @@ const Sidebar = () => {
         <SidebarOptions
           Icon={SendIcon}
           title="Sent"
-          number="224"
+          number={totalSent}
           isActive={activeOptions.sent}
         />
       </div>
@@ -90,7 +111,7 @@ const Sidebar = () => {
         <SidebarOptions
           Icon={DraftsIcon}
           title="Drafts"
-          number="224"
+          number="0"
           isActive={activeOptions.drafts}
         />
       </div>

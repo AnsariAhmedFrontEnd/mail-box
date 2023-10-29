@@ -1,13 +1,23 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import Welcome from './Pages/Welcome';
+import Sent from './components/Sent';
+import EmailList from './components/EmailList';
+import Folders from './components/Folders';
 
 const App = () => {
   return (
     <Routes>
-      <Route path='/' element={<Login />}></Route>
-      <Route path='/inbox/*' element={<Welcome />}></Route>
+      <Route path='/' element={<Login />} />
+      <Route path='/mails/*' element={<Welcome />}>
+        <Route path='inbox' element={<EmailList />} />
+        <Route path='sent' element={<Sent />} />
+        <Route path='starred' element={<Folders />} />
+        <Route path='important' element={<Folders />} />
+        <Route path='drafts' element={<Folders />} />
+      </Route>
       </Routes>
+      
   );
 }
 

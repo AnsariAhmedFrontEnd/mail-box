@@ -4,9 +4,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import HeightIcon from "@mui/icons-material/Height";
 import Editor from "./Editor";
 import "./Compose.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../store/mailSlice";
-import { auth } from "../config/firebase";
 import axios from "axios";
 
 const Compose = () => {
@@ -15,8 +14,7 @@ const Compose = () => {
   const [msg, setMsg] = useState("");
 
 
-  const user = auth?.currentUser?.email;
-  console.log(user);
+  const user = useSelector(state => state.auth.email)
 
   const dispatch = useDispatch();
   const closeMailBoxHandler = () => {
@@ -32,7 +30,7 @@ const Compose = () => {
       to,
       subject,
       msg,
-      timeStamp: new Date(),
+      timeStamp: new Date().toJSON(),
     };
 
     try {

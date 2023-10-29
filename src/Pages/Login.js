@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Form, Button } from "react-bootstrap";
 import "./Login.css";
-import { auth } from "../config/firebase";
-import logo from '../assests/sharp-mail-low-resolution-logo-color-on-transparent-background - Copy.png';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import logo from "../assests/sharp-mail-low-resolution-logo-color-on-transparent-background - Copy.png";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +36,22 @@ const Login = () => {
     if (!isLogin) {
       if (password === confirmPassword) {
         try {
-          await createUserWithEmailAndPassword(auth, email, password);
+          const url =
+            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAsIfm2Cj65I3bpkMyPcBl0UPLsYBgBeF0";
+
+          const response = await axios.post(url, {
+            email,
+            password,
+            returnSecureToken: true,
+          });
+
+          const token = response.data.idToken;
+
+          localStorage.setItem('token', token);
+          localStorage.setItem('email', response.data.email);
+          dispatch(authActions.login(response.data.email));
+
+          
 
           alert("Sign Up Successful, Please Login");
           setIsLogin(!isLogin);
@@ -51,9 +65,23 @@ const Login = () => {
 
     if (isLogin) {
       try {
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate("/inbox");
-        console.log("Logged in");
+        const url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAsIfm2Cj65I3bpkMyPcBl0UPLsYBgBeF0";
+
+        const response = await axios.post(url, {
+          email,
+          password,
+          returnSecureToken: true,
+        });
+
+        const token = response.data.idToken;
+
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('email', response.data.email);
+        dispatch(authActions.login(response.data.email));
+
+        navigate("/mails/inbox");
       } catch (error) {
         console.log(error);
       }
@@ -67,10 +95,12 @@ const Login = () => {
     >
       <Card style={{ width: "35%" }}>
         <div className="d-flex align-items-center justify-content-center mt-4">
-        <img src={logo} alt="logo" className="logo" />
+          <img src={logo} alt="logo" className="logo" />
         </div>
         <Card.Body>
-          <p className="text-center login-title">{isLogin ? "Login" : "Sign Up"}</p>
+          <p className="text-center login-title">
+            {isLogin ? "Login" : "Sign Up"}
+          </p>
           <p className="text-center tagline">Made by a Sharpenerian</p>
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -116,7 +146,8 @@ const Login = () => {
             <div className="w-100 mt-4">
               <p className="text">
                 {" "}
-                {isLogin ? "Don't Have an Account ?" : "Have an account?"}{""}
+                {isLogin ? "Don't Have an Account ?" : "Have an account?"}
+                {""}
                 <button
                   type="button"
                   className="link-like-btn"
