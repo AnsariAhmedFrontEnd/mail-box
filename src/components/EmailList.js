@@ -7,14 +7,12 @@ import { mailActions } from "../store/mailSlice";
 
 const EmailList = () => {
   const dispatch = useDispatch();
-  
+
   const emails = useSelector((state) => state.mail.emails);
-  const user = useSelector(state => state.auth.email);
+  const user = useSelector((state) => state.auth.email);
 
- 
-
-  const getInboxEmails = useCallback(async() => {
-    const sanitizedUser = user.replace(/[@.]/g, '');
+  const getInboxEmails = useCallback(async () => {
+    const sanitizedUser = user.replace(/[@.]/g, "");
 
     const getEmailsUrl = `https://mail-box-7480d-default-rtdb.firebaseio.com/${sanitizedUser}/inbox.json`;
     const response = await axios(getEmailsUrl);
@@ -24,17 +22,13 @@ const EmailList = () => {
       for (const key in response.data) {
         emailArray.push({ id: key, ...response.data[key] });
       }
-      console.log(emailArray);
       dispatch(mailActions.setEmails(emailArray));
     }
-
-
-    
-  },[user,dispatch]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     getInboxEmails();
-  }, [getInboxEmails])
+  }, [getInboxEmails]);
 
   return (
     <div className="email-list">

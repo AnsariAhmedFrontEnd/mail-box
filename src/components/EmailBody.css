@@ -59,3 +59,18 @@
 .email-body .email-body__left svg {
     margin-right: 5px;
 } 
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.dot.read {
+    background: linear-gradient(90deg, rgb(242,60,60), rgb(51,51,51));
+}
+
+.dot.unread {
+    background-color: black;
+}

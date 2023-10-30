@@ -18,8 +18,11 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const totalInbox = emailsArray.reduce((total, email) => {
-    
+    if(!email.isRead) {
+
       total += 1;
+    }
+    
     
     return total;
   }, 0); 

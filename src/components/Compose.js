@@ -44,6 +44,7 @@ const Compose = () => {
         subject,
         msg,
         timeStamp: new Date(),
+        isRead:false,
       };
 
       //data should be in receivers inbox

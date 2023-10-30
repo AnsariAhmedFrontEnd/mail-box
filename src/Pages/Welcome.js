@@ -23,10 +23,10 @@ const Welcome = () => {
           <EmailListSettings />
           <EmailType />
           <Routes>
-            <Route path="/inbox/*" element={<EmailList />} >
-            <Route path=":mailid" element={<EmailDetails />} />
-            </Route>
+            <Route path="/inbox/*" element={<EmailList />} />
+            <Route path="/inbox/:mailid" element={<EmailDetails />} />
             <Route path="/sent" element={<Sent />} />
+            <Route path="/sent/:mailid" element={<EmailDetails />} />
           </Routes>
         </div>
       </div>

@@ -6,7 +6,6 @@ const mailSlice = createSlice({
     sendMessageIsOpen: false,
     emails: [],
     sent : [],
-    selectedMsg : null,
   },
 
   reducers: {
@@ -23,8 +22,12 @@ const mailSlice = createSlice({
     setSentBox : (state, action) => {
       state.sent = action.payload
     },
-    openMsg : (state, action) => {
-      state.selectedMsg = action.payload
+    markedAsRead : (state, action) => {
+      const email = state.emails.find(email => email.id === action.payload);
+
+      if(email) {
+        email.isRead = true
+      }
     }
     
   },

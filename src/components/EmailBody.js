@@ -1,25 +1,37 @@
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
-import StarIcon from "@mui/icons-material/Star";
 import LabelImportant from "@mui/icons-material/LabelImportant";
 import "./EmailBody.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { mailActions } from "../store/mailSlice";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const EmailBody = ({ from, subject, msg, timeStamp, id }) => {
-  const {mailId} = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.email);
+  const emails = useSelector(state => state.mail.emails);
 
-  const setMails = () => {
-    dispatch(mailActions.openMsg({ from, subject, msg }));
-    navigate(`/inbox/${id}`);
+  const isRead = emails.find((email) => email.id === id).isRead;
+
+
+  const sanitizedUser = user.replace(/[@.]/g, "");
+
+  const navigate = useNavigate();
+
+  const setMails = async () => {
+    try {
+      const inboxUrl = `https://mail-box-7480d-default-rtdb.firebaseio.com/${sanitizedUser}/inbox/${id}.json`;
+      await axios.patch(inboxUrl, { isRead: true });
+    } catch (error) {
+      console.log(error);
+    }
+
+    navigate(`/mails/inbox/${id}`);
   };
   return (
     <div className="email-body" onClick={setMails}>
       <div className="email-body__left">
+        <div className={`dot ${isRead ? 'unread': 'read'} `}></div>
         <CheckBoxOutlineBlank />
-        <StarIcon />
+
         <LabelImportant />
         <h4>{from}</h4>
       </div>
